@@ -8,6 +8,7 @@ export function configureGoogleSignIn() {
     iosClientId:
       "445698063824-ulavn52qkr8su4bdkm0p1671l9ifdb05.apps.googleusercontent.com",
     offlineAccess: true,
+    scopes: ["profile", "email"],
     forceCodeForRefreshToken: true,
   });
 }

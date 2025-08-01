@@ -25,6 +25,10 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+     <key>CFBundleURLSchemes</key>
+    <array>
+      <string>com.googleusercontent.apps.445698063824-ulavn52qkr8su4bdkm0p1671l9ifdb05</string> <!-- your REVERSE_CLIENT_ID -->
+    </array>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.well.gymmobileapp</string>
