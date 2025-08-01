@@ -15,7 +15,7 @@ prepare_react_native_project!
 
 target 'gymmobileapp' do
   use_expo_modules!
-
+  use_frameworks! :linkage => :dynamic
   if ENV['EXPO_USE_COMMUNITY_AUTOLINKING'] == '1'
     config_command = ['node', '-e', "process.argv=['', '', 'config'];require('@react-native-community/cli').run()"];
   else
@@ -29,6 +29,9 @@ target 'gymmobileapp' do
     ]
   end
 
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Auth'
+
   config = use_native_modules!(config_command)
 
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
@@ -38,6 +41,7 @@ target 'gymmobileapp' do
     :path => config[:reactNativePath],
     :hermes_enabled => podfile_properties['expo.jsEngine'] == nil || podfile_properties['expo.jsEngine'] == 'hermes',
     # An absolute path to your application root.
+    
     :app_path => "#{Pod::Config.instance.installation_root}/..",
     :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false',
   )
