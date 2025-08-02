@@ -1,10 +1,26 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 export default function HomePage() {
+  const navigation: any = useNavigation();
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Welcome to Home Page!</Text>
+      <TouchableOpacity
+        style={{ backgroundColor: "#28A745", borderRadius: 12, marginTop: 20 }}
+        onPress={() => navigation.navigate("MealPage")}
+      >
+        <Text
+          style={{
+            padding: 20,
+            fontWeight: "800",
+            color: "#fff",
+          }}
+        >
+          Navigate to meals sections
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

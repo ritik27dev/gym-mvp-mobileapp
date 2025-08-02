@@ -16,14 +16,10 @@ export default function SignUpScreen({ navigation }: any) {
       await GoogleSignin.hasPlayServices();
       const userInfo: any = await GoogleSignin.signIn();
 
-      console.log("Google user info:", userInfo);
-
       const idToken = userInfo?.data?.idToken;
       navigation.navigate("HomePage");
       const googleCredential = GoogleAuthProvider.credential(idToken);
       const userCredential = await signInWithCredential(auth, googleCredential);
-
-      console.log("Signed in user:", userCredential.user);
     } catch (err: any) {
       console.log("Error", err);
     }
