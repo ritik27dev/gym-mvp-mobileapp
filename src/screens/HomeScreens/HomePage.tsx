@@ -21,6 +21,25 @@ export default function HomePage() {
           Navigate to meals sections
         </Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={{
+          backgroundColor: "#68d281ff",
+          borderRadius: 12,
+          marginTop: 20,
+        }}
+        onPress={() => navigation.navigate("Moods")}
+      >
+        <Text
+          style={{
+            padding: 20,
+            fontWeight: "800",
+            color: "#000",
+          }}
+        >
+          Navigate to moods sections
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

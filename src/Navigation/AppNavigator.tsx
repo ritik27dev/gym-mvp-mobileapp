@@ -8,6 +8,7 @@ import HomePage from "../screens/HomeScreens/HomePage";
 import Meals from "../screens/HomeScreens/Meals";
 import MixUp from "../screens/HomeScreens/MixUp";
 import Macros from "../screens/HomeScreens/Macros";
+import Moods from "../screens/HomeScreens/Moods/Moods";
 
 export type RootStackParamList = {
   SignUp: undefined;
@@ -32,6 +33,7 @@ export default function AppNavigator() {
         <Stack.Screen name="MealPage" component={Meals} />
         <Stack.Screen name="MixUp" component={MixUp} />
         <Stack.Screen name="Macros" component={Macros} />
+        <Stack.Screen name="Moods" component={Moods} />
       </Stack.Navigator>
     </NavigationContainer>
   );
