@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,11 +11,17 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import NutritionTrends from "../Moods/components/NutritionTrends";
+import NutritionTracker from "../Moods/components/NutritionTracker";
 
 export default function Meals() {
   const navigation: any = useNavigation();
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
+  const [nutritionData, setNutritionData] = useState<any>();
+
+  const dateObject = new Date();
+  const formattedDate = dateObject.toISOString().slice(0, 10);
 
   const handleProceed = async () => {
     if (!prompt) return;
@@ -30,7 +36,7 @@ export default function Meals() {
           body: JSON.stringify({
             prompt,
             userId: 1,
-            date: "2025-07-05",
+            date: formattedDate,
           }),
         }
       );
@@ -50,6 +56,7 @@ export default function Meals() {
           JSON.stringify({
             id: data.id,
             userId: data.userId,
+            data: data,
           })
         );
         navigation.navigate("MixUp", {
@@ -66,6 +73,30 @@ export default function Meals() {
     }
   };
 
+  const getNutritionData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("nutritionData");
+      if (value !== null) {
+        // value previously stored, parse it
+        const data = JSON.parse(value);
+        // data.id and data.userId available
+        console.log("Nutrition Data:", data);
+        setNutritionData(data);
+        return data;
+      }
+      // value is null if nothing is stored
+      return null;
+    } catch (e) {
+      // error reading value
+      console.error("Failed to load nutritionData", e);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    getNutritionData();
+  }, []);
+
   return (
     <ScrollView style={styles.container}>
       {/* Navigation Bar */}
@@ -79,7 +110,6 @@ export default function Meals() {
         </View>
       </View>
 
-      {/* Hydration and Diet Section */}
       <Text style={styles.sectionTitle}>Hydration and Diet</Text>
       <View style={styles.chatContainer}>
         <View style={{ padding: 10 }}>
@@ -125,6 +155,9 @@ export default function Meals() {
           </TouchableOpacity>
         </View>
       </View>
+      <NutritionTrends userId={1} />
+
+      <NutritionTracker userId={1} />
     </ScrollView>
   );
 }
@@ -146,6 +179,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     padding: 15,
     marginLeft: 10,
+    textAlign: "center",
   },
   chatContainer: {
     padding: 10,

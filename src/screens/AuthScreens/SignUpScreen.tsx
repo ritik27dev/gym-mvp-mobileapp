@@ -1,28 +1,65 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { configureGoogleSignIn } from "../../googleSignIn";
 import { auth } from "../../../firebase";
-import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithCredential,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 export default function SignUpScreen({ navigation }: any) {
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     configureGoogleSignIn();
-  }, []);
+
+    // Check if user is already logged in
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is already logged in, navigate to HomePage
+        try {
+          const token = await user.getIdToken();
+          await AsyncStorage.setItem("userToken", token);
+          navigation.replace("HomePage");
+        } catch (error) {
+          console.log("Error retrieving token:", error);
+        }
+      }
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [navigation]);
 
   async function onGoogleButtonPress() {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo: any = await GoogleSignin.signIn();
-
       const idToken = userInfo?.data?.idToken;
-      navigation.navigate("HomePage");
+
+      // Save token to AsyncStorage
+      await AsyncStorage.setItem("userToken", idToken);
+
       const googleCredential = GoogleAuthProvider.credential(idToken);
-      const userCredential = await signInWithCredential(auth, googleCredential);
+      await signInWithCredential(auth, googleCredential);
+
+      // Navigate to HomePage after successful sign-in
+      navigation.replace("HomePage");
     } catch (err: any) {
       console.log("Error", err);
     }
+  }
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
@@ -32,7 +69,10 @@ export default function SignUpScreen({ navigation }: any) {
         Welcome! Let’s customize Wellvantage for your Goals.
       </Text>
 
-      <TouchableOpacity style={styles.greenButton}>
+      <TouchableOpacity
+        onPress={() => navigation.replace("HomePage")}
+        style={styles.greenButton}
+      >
         <Text style={styles.greenButtonText}>Continue</Text>
       </TouchableOpacity>
 
@@ -42,22 +82,10 @@ export default function SignUpScreen({ navigation }: any) {
         style={styles.googleButton}
         onPress={onGoogleButtonPress}
       >
-        <Image
-          source={{
-            uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png",
-          }}
-          style={styles.icon}
-        />
         <Text style={styles.socialButtonText}>Continue with Google</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.appleButton}>
-        <Image
-          source={{
-            uri: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
-          }}
-          style={styles.icon}
-        />
         <Text style={styles.socialButtonText}>Continue with Apple</Text>
       </TouchableOpacity>
 

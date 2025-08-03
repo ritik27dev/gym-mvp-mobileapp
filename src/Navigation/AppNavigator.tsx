@@ -5,10 +5,11 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import SignUpScreen from "../screens/AuthScreens/SignUpScreen";
 import HomePage from "../screens/HomeScreens/HomePage";
-import Meals from "../screens/HomeScreens/Meals";
-import MixUp from "../screens/HomeScreens/MixUp";
-import Macros from "../screens/HomeScreens/Macros";
+import Meals from "../screens/HomeScreens/Meals/Meals";
 import Moods from "../screens/HomeScreens/Moods/Moods";
+import MoodsResult from "../screens/HomeScreens/Moods/MoodsResult";
+import Macros from "../screens/HomeScreens/Meals/Macros";
+import MixUp from "../screens/HomeScreens/Meals/MixUp";
 
 export type RootStackParamList = {
   SignUp: undefined;
@@ -34,6 +35,7 @@ export default function AppNavigator() {
         <Stack.Screen name="MixUp" component={MixUp} />
         <Stack.Screen name="Macros" component={Macros} />
         <Stack.Screen name="Moods" component={Moods} />
+        <Stack.Screen name="MoodsResult" component={MoodsResult} />
       </Stack.Navigator>
     </NavigationContainer>
   );
