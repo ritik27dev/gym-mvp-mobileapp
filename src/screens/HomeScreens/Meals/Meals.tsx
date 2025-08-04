@@ -80,7 +80,6 @@ export default function Meals() {
         // value previously stored, parse it
         const data = JSON.parse(value);
         // data.id and data.userId available
-        console.log("Nutrition Data:", data);
         setNutritionData(data);
         return data;
       }
@@ -269,48 +268,3 @@ const styles = StyleSheet.create({
   },
   navIcon: { fontSize: 24, textAlign: "center" },
 });
-
-// {
-//   {/* Track Water Intake Button */}
-//       {/* <TouchableOpacity style={styles.trackButton}>
-//         <Text style={styles.trackButtonText}>Track Water Intake</Text>
-//       </TouchableOpacity> */}
-
-//       {/* Nutrition Trends Section */}
-
-//       <View style={styles.trendsContainer}>
-//         <Text style={styles.sectionTitle}>Nutrition Trends</Text>
-//         <View style={styles.datePicker}>
-//           <Text>Today: 1 Feb 2025</Text>
-//           <Text>▼</Text>
-//         </View>
-//         {/* <View style={styles.trendsTable}>
-//           <View style={styles.tableRow}>
-//             <Text> </Text>
-//             <Text style={styles.tableHeader}>Goal</Text>
-//             <Text style={styles.tableHeader}>Consumed</Text>
-//             <Text style={styles.tableHeader}>Left</Text>
-//           </View>
-//           <View style={styles.tableRow}>
-//             <Text>Hydration (L)</Text>
-//             <Text>2.2</Text>
-//             <Text>1.2</Text>
-//             <Text>1.0</Text>
-//           </View>
-//           <View style={styles.tableRow}>
-//             <Text>Calories (Kcal)</Text>
-//             <Text>3000</Text>
-//             <Text>4000</Text>
-//             <Text>+1000</Text>
-//           </View>
-//           <View style={styles.tableRow}>
-//             <Text>Protein (g)</Text>
-//             <Text>50</Text>
-//             <Text>25</Text>
-//             <Text>25</Text>
-//           </View>
-//           <TouchableOpacity>
-//             <Text style={styles.showMore}>Show More ▼</Text>
-//           </TouchableOpacity>
-//         </View> */}
-// }

@@ -24,7 +24,7 @@ export default function HomePage() {
 
       <TouchableOpacity
         style={{
-          backgroundColor: "#68d281ff",
+          backgroundColor: "#224a2dff",
           borderRadius: 12,
           marginTop: 20,
         }}
@@ -34,7 +34,7 @@ export default function HomePage() {
           style={{
             padding: 20,
             fontWeight: "800",
-            color: "#000",
+            color: "#fff",
           }}
         >
           Navigate to moods sections

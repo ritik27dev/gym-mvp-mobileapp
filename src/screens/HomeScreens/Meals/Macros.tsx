@@ -54,7 +54,7 @@ export default function Macros({ navigation }) {
 
       if (response.ok) {
         Alert.alert("Success", "Meal data updated successfully!");
-        // navigation.goBack();
+        navigation.replace("MealPage");
       } else {
         const errorData = await response.json();
         console.error("Error response:", errorData);

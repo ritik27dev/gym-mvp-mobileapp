@@ -1,5 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const API_BASE_URL = "https://gym-mvp-server.onrender.com/api";
 
@@ -94,6 +95,14 @@ export const useMoods = (userId) => {
     }
   }, [userId]);
 
+  useFocusEffect(
+    useCallback(() => {
+      if (userId) {
+        fetchMoods(); // No cache
+      }
+    }, [userId])
+  );
+
   // Get moods for a specific date
   const getMoodsForDate = (date) => {
     const dateStr =
@@ -114,9 +123,8 @@ export const useMoods = (userId) => {
   // Check if a specific mood type has been recorded for a date
   const hasMoodForTypeAndDate = (type, date = selectedDate) => {
     const dateStr =
-      typeof date === "string" ? date : date.toISOString().split("T")[0];
+      typeof date === "string" ? date : date?.toISOString().split("T")[0];
     const moodsForDate = getMoodsForDate(dateStr);
-
     return moodsForDate.some((mood) => mood.type === type);
   };
 

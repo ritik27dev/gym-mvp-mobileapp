@@ -10,29 +10,11 @@ import {
   signInWithCredential,
   onAuthStateChanged,
 } from "firebase/auth";
+import GoogleIcon from "../../assets/svg/GoogleIcon";
 
 export default function SignUpScreen({ navigation }: any) {
-  const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     configureGoogleSignIn();
-
-    // Check if user is already logged in
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // User is already logged in, navigate to HomePage
-        try {
-          const token = await user.getIdToken();
-          await AsyncStorage.setItem("userToken", token);
-          navigation.replace("HomePage");
-        } catch (error) {
-          console.log("Error retrieving token:", error);
-        }
-      }
-      setIsLoading(false);
-    });
-
-    return () => unsubscribe();
   }, [navigation]);
 
   async function onGoogleButtonPress() {
@@ -54,14 +36,6 @@ export default function SignUpScreen({ navigation }: any) {
     }
   }
 
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
@@ -71,7 +45,10 @@ export default function SignUpScreen({ navigation }: any) {
 
       <TouchableOpacity
         onPress={() => navigation.replace("HomePage")}
-        style={styles.greenButton}
+        style={[
+          styles.googleButton,
+          { backgroundColor: "#28A745", marginTop: "30%" },
+        ]}
       >
         <Text style={styles.greenButtonText}>Continue</Text>
       </TouchableOpacity>
@@ -82,13 +59,13 @@ export default function SignUpScreen({ navigation }: any) {
         style={styles.googleButton}
         onPress={onGoogleButtonPress}
       >
-        <Text style={styles.socialButtonText}>Continue with Google</Text>
+        <View style={styles.googleButtonContent}>
+          <GoogleIcon style={{ marginRight: 8 }} />
+          <Text style={[styles.greenButtonText, { color: "#000" }]}>
+            Continue with Google
+          </Text>
+        </View>
       </TouchableOpacity>
-
-      <TouchableOpacity style={styles.appleButton}>
-        <Text style={styles.socialButtonText}>Continue with Apple</Text>
-      </TouchableOpacity>
-
       <Text style={styles.privacyText}>
         I agree to the collection and processing of my data as outlined in the{" "}
         <Text style={styles.link}>Privacy Policy</Text>.
@@ -104,45 +81,42 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     paddingHorizontal: 20,
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
   },
-  title: { fontSize: 22, fontWeight: "bold", marginBottom: 10 },
-  subtitle: { fontSize: 16, textAlign: "center", marginBottom: 30 },
-  greenButton: {
-    backgroundColor: "#28a745",
-    paddingVertical: 15,
-    paddingHorizontal: 60,
-    borderRadius: 8,
-    marginBottom: 20,
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 10,
+    paddingTop: "40%",
   },
-  greenButtonText: { color: "#fff", fontSize: 16 },
+  subtitle: { fontSize: 16, textAlign: "center", marginBottom: 30 },
+
   orText: { fontSize: 14, marginVertical: 10, fontWeight: "600" },
   googleButton: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center", // center content horizontally
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#ccc",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingVertical: 10,
     borderRadius: 8,
-    width: "80%",
+    width: "100%",
     marginBottom: 10,
     elevation: 2,
   },
-  appleButton: {
+  googleButtonContent: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    width: "80%",
-    marginBottom: 20,
-    elevation: 2,
+    justifyContent: "center",
+  },
+  greenButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    // Remove width: "100%" here, as it can cause alignment issues
+    textAlign: "center",
+    fontWeight: "600",
   },
   icon: { width: 20, height: 20, marginRight: 10 },
   socialButtonText: { fontSize: 16 },
@@ -150,7 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: "center",
     color: "#555",
-    marginTop: 20,
+    alignSelf: "center",
   },
   link: { color: "blue", textDecorationLine: "underline" },
 });

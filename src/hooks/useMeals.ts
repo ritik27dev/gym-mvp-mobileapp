@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 import { API_BASE_URL } from "../api/base";
 
-// Custom hook for managing meals with date filtering and nutrition calculations
 export const useMeals = (userId) => {
   const [allMeals, setAllMeals] = useState({});
   const [loading, setLoading] = useState(true);
@@ -11,21 +11,17 @@ export const useMeals = (userId) => {
     new Date().toISOString().split("T")[0]
   );
 
-  // Fetch meals with caching
   const fetchMeals = async (useCache = true) => {
     try {
       setLoading(true);
       const cacheKey = `meals_${userId}`;
 
-      // Try to get from cache first
       if (useCache) {
         const cachedData = await AsyncStorage.getItem(cacheKey);
         if (cachedData) {
           const parsed = JSON.parse(cachedData);
-          // Check if cache is still fresh (e.g., less than 5 minutes old)
           const cacheAge = Date.now() - parsed.timestamp;
           if (cacheAge < 5 * 60 * 1000) {
-            // 5 minutes
             setAllMeals(parsed.meals);
             setLoading(false);
             return;
@@ -33,13 +29,11 @@ export const useMeals = (userId) => {
         }
       }
 
-      // Fetch from API
       const response = await fetch(
         `${API_BASE_URL}/nutrition/meals/${userId}`,
         {
           headers: {
             "Content-Type": "application/json",
-            // Add your auth headers here
           },
         }
       );
@@ -52,7 +46,6 @@ export const useMeals = (userId) => {
       setAllMeals(data.meals);
       setError(null);
 
-      // Cache the data
       await AsyncStorage.setItem(
         cacheKey,
         JSON.stringify({
@@ -68,12 +61,21 @@ export const useMeals = (userId) => {
     }
   };
 
-  // Initial fetch
+  // Initial fetch on mount
   useEffect(() => {
     if (userId) {
       fetchMeals();
     }
   }, [userId]);
+
+  // ✅ Add this to re-fetch when screen regains focus
+  useFocusEffect(
+    useCallback(() => {
+      if (userId) {
+        refreshMeals(); // No cache
+      }
+    }, [userId])
+  );
 
   // Get meals for a specific date (works with your API structure)
   const getMealsForSpecificDate = (date) => {

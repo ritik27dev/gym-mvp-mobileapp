@@ -29,8 +29,24 @@ export default function AppNavigator() {
           headerShown: true,
         }}
       >
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="HomePage" component={HomePage} />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUpScreen}
+          options={{
+            headerTitleStyle: {
+              opacity: 0,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="HomePage"
+          component={HomePage}
+          options={{
+            headerTitleStyle: {
+              opacity: 0,
+            },
+          }}
+        />
         <Stack.Screen name="MealPage" component={Meals} />
         <Stack.Screen name="MixUp" component={MixUp} />
         <Stack.Screen name="Macros" component={Macros} />
